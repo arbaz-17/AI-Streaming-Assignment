@@ -1,0 +1,93 @@
+/* layout.css */
+
+.app {
+  min-height: 100vh;
+  padding: 24px 16px;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+}
+
+.app-container {
+  width: min(1100px, 100%); /* Slightly narrower for a tighter look */
+  margin: 0 auto;
+  padding: 32px;
+  border: 1px solid rgba(255, 255, 255, 0.1); 
+  border-radius: 20px; 
+  background: #09090b; 
+  color: #fff;
+  box-shadow: 0 20px 40px -12px rgba(0, 0, 0, 0.5); 
+}
+
+.app-header {
+  padding-bottom: 20px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  margin-bottom: 24px;
+  text-align: center;
+}
+
+.app-header h1 {
+  margin: 0 0 8px;
+  font-size: 1.85rem; /* Scaled down */
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+.app-header p {
+  margin: 0;
+  color: #a1a1aa;
+  font-size: 0.95rem; /* Scaled down */
+}
+
+/* Base Layout (Mobile First: Vertically Stacked) */
+.main-layout {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 24px; /* Tighter gap */
+}
+
+.left-panel,
+.right-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 20px; /* Tighter gap */
+}
+
+.status-controls-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin-top: auto;
+}
+
+/* Large Screen Layout (Left and Right Columns) */
+@media (min-width: 860px) {
+  .main-layout {
+    grid-template-columns: 1fr 1fr;
+    gap: 32px; /* Tighter gap */
+  }
+  
+  .app-header {
+    text-align: left;
+  }
+  
+  .right-panel {
+    height: 100%;
+  }
+}
+
+/* Smaller Mobile Adjustments */
+@media (max-width: 700px) {
+  .app {
+    padding: 12px;
+  }
+
+  .app-container {
+    padding: 20px;
+    border-radius: 16px;
+  }
+
+  .app-header h1 {
+    font-size: 1.5rem;
+  }
+}

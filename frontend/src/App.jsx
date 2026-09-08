@@ -7,7 +7,8 @@ import ResponsePanel from "./components/ResponsePanel";
 import StreamingStatus from "./components/StreamingStatus";
 import GenerationControls from "./components/GenerationControls";
 
-import "./App.css";
+import "./styles/layout.css";
+import "./styles/components.css";
 
 const INITIAL_STATUS = "idle";
 
@@ -64,32 +65,40 @@ function App() {
       <div className="app-container">
         <Header />
 
-        <main>
-          <GenerationForm
-            input={input}
-            operation={operation}
-            onInputChange={setInput}
-            onOperationChange={setOperation}
-            disabled={isGenerating}
-          />
+        <main className="main-layout">
+          {/* Left Panel: Inputs and Triggers */}
+          <div className="left-panel">
+            <GenerationForm
+              input={input}
+              operation={operation}
+              onInputChange={setInput}
+              onOperationChange={setOperation}
+              disabled={isGenerating}
+            />
 
-          <ProviderButtons
-            onGenerate={handleGenerate}
-            disabled={isGenerating}
-          />
+            <ProviderButtons
+              onGenerate={handleGenerate}
+              disabled={isGenerating}
+            />
+          </div>
 
-          <ResponsePanel
-            output={output}
-            error={error}
-          />
+          {/* Right Panel: Results and Controls */}
+          <div className="right-panel">
+            <ResponsePanel
+              output={output}
+              error={error}
+            />
 
-          <StreamingStatus status={status} />
+            <div className="status-controls-wrapper">
+              <StreamingStatus status={status} />
 
-          <GenerationControls
-            status={status}
-            onStop={handleStop}
-            onRetry={handleRetry}
-          />
+              <GenerationControls
+                status={status}
+                onStop={handleStop}
+                onRetry={handleRetry}
+              />
+            </div>
+          </div>
         </main>
       </div>
     </div>
