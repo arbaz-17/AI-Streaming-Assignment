@@ -7,6 +7,8 @@ import ResponsePanel from "./components/ResponsePanel";
 import StreamingStatus from "./components/StreamingStatus";
 import GenerationControls from "./components/GenerationControls";
 
+import { createMockAIStream } from "./services/mockAI";
+
 import "./styles/layout.css";
 import "./styles/components.css";
 
@@ -25,7 +27,7 @@ function App() {
   const isGenerating =
     status === "starting" || status === "streaming";
 
-  const handleGenerate = (selectedProvider) => {
+  const handleGenerate = async (selectedProvider) => {
     if (!input.trim()) {
       setError("Please enter some text before generating a response.");
       setStatus("error");
@@ -36,19 +38,45 @@ function App() {
     setOutput("");
     setError("");
 
-    /*
-     * Actual generation will be implemented in later phases.
-     *
-     * For now we only establish the state transition that
-     * a generation has started.
-     */
-    setStatus("starting");
+    if (selectedProvider !== "mock") {
+      setStatus("starting");
+      return;
+    }
+
+    try {
+      setStatus("starting");
+
+      const stream = createMockAIStream(operation);
+
+      const reader = stream.getReader();
+      const decoder = new TextDecoder();
+
+      setStatus("streaming");
+
+      while (true) {
+        const { done, value } = await reader.read();
+
+        if (done) {
+          break;
+        }
+
+        const chunk = decoder.decode(value, {
+          stream: true,
+        });
+
+        setOutput((previousOutput) => previousOutput + chunk);
+      }
+
+      setStatus("complete");
+    } catch (streamError) {
+      console.error("Mock streaming error:", streamError);
+
+      setError("Something went wrong while generating the response.");
+      setStatus("error");
+    }
   };
 
   const handleStop = () => {
-    /*
-     * AbortController will be implemented in Phase 6.
-     */
     setStatus("stopped");
   };
 
