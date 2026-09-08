@@ -8,6 +8,8 @@ import StreamingStatus from "./components/StreamingStatus";
 import GenerationControls from "./components/GenerationControls";
 
 import { createMockAIStream } from "./services/mockAI";
+import { createRealAIStream } from "./services/realAI";
+import { createSSEParser } from "./services/sseParser";
 
 import "./styles/layout.css";
 import "./styles/components.css";
@@ -37,46 +39,78 @@ function App() {
     setProvider(selectedProvider);
     setOutput("");
     setError("");
-
-    if (selectedProvider !== "mock") {
-      setStatus("starting");
-      return;
-    }
+    setStatus("starting");
 
     try {
-      setStatus("starting");
+      let stream;
 
-      const stream = createMockAIStream(operation);
+      if (selectedProvider === "mock") {
+        stream = createMockAIStream(operation);
+      } else if (selectedProvider === "real") {
+        stream = await createRealAIStream({
+          text: input,
+          operation,
+        });
+      } else {
+        throw new Error("Invalid AI provider.");
+      }
 
       const reader = stream.getReader();
       const decoder = new TextDecoder();
 
       setStatus("streaming");
 
-      while (true) {
-        const { done, value } = await reader.read();
+      if (selectedProvider === "mock") {
+        while (true) {
+          const { done, value } = await reader.read();
 
-        if (done) {
-          break;
+          if (done) {
+            break;
+          }
+
+          const chunk = decoder.decode(value, {
+            stream: true,
+          });
+
+          setOutput((previousOutput) => previousOutput + chunk);
         }
-
-        const chunk = decoder.decode(value, {
-          stream: true,
+      } else {
+        const parser = createSSEParser((content) => {
+          setOutput((previousOutput) => previousOutput + content);
         });
 
-        setOutput((previousOutput) => previousOutput + chunk);
+        while (true) {
+          const { done, value } = await reader.read();
+
+          if (done) {
+            break;
+          }
+
+          const chunk = decoder.decode(value, {
+            stream: true,
+          });
+
+          parser.push(chunk);
+        }
+
+        parser.flush();
       }
 
       setStatus("complete");
-    } catch (streamError) {
-      console.error("Mock streaming error:", streamError);
+    } catch (generationError) {
+      console.error("Generation error:", generationError);
 
-      setError("Something went wrong while generating the response.");
+      setError(
+        generationError.message ||
+          "Something went wrong while generating the response."
+      );
+
       setStatus("error");
     }
   };
 
   const handleStop = () => {
+    // Actual cancellation will be implemented in Phase 6.
     setStatus("stopped");
   };
 
