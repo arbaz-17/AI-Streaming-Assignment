@@ -1,6 +1,10 @@
 const API_URL = "http://localhost:3000/api/generate";
 
-export async function createRealAIStream({ text, operation }) {
+export async function createRealAIStream({
+  text,
+  operation,
+  signal,
+}) {
   const response = await fetch(API_URL, {
     method: "POST",
     headers: {
@@ -10,6 +14,7 @@ export async function createRealAIStream({ text, operation }) {
       text,
       operation,
     }),
+    signal,
   });
 
   if (!response.ok) {

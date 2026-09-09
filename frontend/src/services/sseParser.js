@@ -1,4 +1,4 @@
-export function createSSEParser(onContent) {
+export function createSSEParser() {
   let buffer = "";
 
   return {
@@ -8,6 +8,8 @@ export function createSSEParser(onContent) {
       const events = buffer.split("\n\n");
 
       buffer = events.pop() ?? "";
+
+      const contents = [];
 
       for (const event of events) {
         const lines = event.split("\n");
@@ -28,13 +30,15 @@ export function createSSEParser(onContent) {
             const content = parsed?.choices?.[0]?.delta?.content;
 
             if (content) {
-              onContent(content);
+              contents.push(content);
             }
           } catch (error) {
             console.warn("Failed to parse SSE event:", error);
           }
         }
       }
+
+      return contents;
     },
 
     flush() {

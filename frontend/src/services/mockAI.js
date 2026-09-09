@@ -6,9 +6,10 @@ const MOCK_RESPONSES = {
     "React is a JavaScript library that helps developers build interactive user interfaces through reusable components and state-driven rendering.",
 };
 
-const wait = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+const wait = (ms) =>
+  new Promise((resolve) => setTimeout(resolve, ms));
 
-export function createMockAIStream(operation) {
+export function createMockAIStream(operation, signal) {
   const text =
     MOCK_RESPONSES[operation] ?? MOCK_RESPONSES.summarize;
 
@@ -17,6 +18,11 @@ export function createMockAIStream(operation) {
   return new ReadableStream({
     async start(controller) {
       for (let index = 0; index < chunks.length; index += 1) {
+        if (signal?.aborted) {
+          controller.close();
+          return;
+        }
+
         const chunk = `${chunks[index]}${
           index < chunks.length - 1 ? " " : ""
         }`;

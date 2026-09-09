@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 
 import Header from "./components/Header";
 import GenerationForm from "./components/GenerationForm";
@@ -9,7 +9,7 @@ import GenerationControls from "./components/GenerationControls";
 
 import { createMockAIStream } from "./services/mockAI";
 import { createRealAIStream } from "./services/realAI";
-import { createSSEParser } from "./services/sseParser";
+import { consumeTextStream } from "./services/streamConsumer";
 
 import "./styles/layout.css";
 import "./styles/components.css";
@@ -26,8 +26,9 @@ function App() {
 
   const [provider, setProvider] = useState(null);
 
-  const isGenerating =
-    status === "starting" || status === "streaming";
+  const abortControllerRef = useRef(null);
+
+  const isGenerating = status === "starting" || status === "streaming";
 
   const handleGenerate = async (selectedProvider) => {
     if (!input.trim()) {
@@ -36,6 +37,10 @@ function App() {
       return;
     }
 
+    const controller = new AbortController();
+
+    abortControllerRef.current = controller;
+
     setProvider(selectedProvider);
     setOutput("");
     setError("");
@@ -43,77 +48,64 @@ function App() {
 
     try {
       let stream;
+      let parseSSE = false;
 
       if (selectedProvider === "mock") {
-        stream = createMockAIStream(operation);
+        stream = createMockAIStream(operation, controller.signal);
       } else if (selectedProvider === "real") {
         stream = await createRealAIStream({
           text: input,
           operation,
+          signal: controller.signal,
         });
+
+        parseSSE = true;
       } else {
         throw new Error("Invalid AI provider.");
       }
 
-      const reader = stream.getReader();
-      const decoder = new TextDecoder();
-
       setStatus("streaming");
 
-      if (selectedProvider === "mock") {
-        while (true) {
-          const { done, value } = await reader.read();
-
-          if (done) {
-            break;
-          }
-
-          const chunk = decoder.decode(value, {
-            stream: true,
-          });
-
+      await consumeTextStream({
+        stream,
+        parseSSE,
+        signal: controller.signal,
+        onChunk: (chunk) => {
           setOutput((previousOutput) => previousOutput + chunk);
-        }
-      } else {
-        const parser = createSSEParser((content) => {
-          setOutput((previousOutput) => previousOutput + content);
-        });
-
-        while (true) {
-          const { done, value } = await reader.read();
-
-          if (done) {
-            break;
-          }
-
-          const chunk = decoder.decode(value, {
-            stream: true,
-          });
-
-          parser.push(chunk);
-        }
-
-        parser.flush();
-      }
+        },
+      });
 
       setStatus("complete");
     } catch (generationError) {
       console.error("Generation error:", generationError);
 
+      if (generationError.name === "AbortError") {
+        setStatus("stopped");
+        return;
+      }
+
       setError(
         generationError.message ||
-          "Something went wrong while generating the response."
+          "Something went wrong while generating the response.",
       );
 
       setStatus("error");
+    } finally {
+      if (abortControllerRef.current === controller) {
+        abortControllerRef.current = null;
+      }
     }
   };
 
   const handleStop = () => {
-    // Actual cancellation will be implemented in Phase 6.
-    setStatus("stopped");
-  };
+    const controller = abortControllerRef.current;
 
+    if (!controller) {
+      return;
+    }
+
+    controller.abort();
+  };
   const handleRetry = () => {
     if (!provider) {
       return;
@@ -128,7 +120,6 @@ function App() {
         <Header />
 
         <main className="main-layout">
-          {/* Left Panel: Inputs and Triggers */}
           <div className="left-panel">
             <GenerationForm
               input={input}
@@ -144,12 +135,8 @@ function App() {
             />
           </div>
 
-          {/* Right Panel: Results and Controls */}
           <div className="right-panel">
-            <ResponsePanel
-              output={output}
-              error={error}
-            />
+            <ResponsePanel output={output} error={error} />
 
             <div className="status-controls-wrapper">
               <StreamingStatus status={status} />
