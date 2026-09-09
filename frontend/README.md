@@ -1,16 +1,47 @@
-# React + Vite
+# Frontend
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+The `frontend` folder contains the React/Vite client for the AI Streaming Text Assistant Assignment.
 
-Currently, two official plugins are available:
+It is responsible for the user interface, generation controls, streaming lifecycle, and consumption of both Mock and Real AI responses.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+## Architecture
 
-## React Compiler
+```text
+UI Components
+      ↓
+App.jsx
+      ↓
+useAIStreaming
+      ↓
+Services
+ ┌────┴─────┐
+Mock       Real
+ │           │
+ │        Express API
+ │           │
+ └────┬──────┘
+      ↓
+Stream Consumer
+      ↓
+Incremental Response UI
+```
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## Folder & File Documentation
 
-## Expanding the ESLint configuration
+| Area | Purpose | Documentation |
+|---|---|---|
+| `components/` | Presentational React components for forms, provider actions, responses, status, and controls. | [Components README](./src/components/README.md) |
+| `hooks/` | Custom React hook containing the AI generation lifecycle, cancellation, retry, and stale-generation protection. | [Hooks README](./src/hooks/README.md) |
+| `services/` | Streaming providers, stream consumption, TextDecoder handling, and SSE parsing. | [Services README](./src/services/README.md) |
+| `App.jsx` | Root page-level component that composes the UI and connects it to the streaming hook. | [App README](./src/README.md) |
+| `styles/` | Application layout and component styling. | — |
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+## Key Responsibilities
+
+- Render the AI Streaming Text Assistant interface.
+- Support **Mock AI** browser-side streaming.
+- Support **Real AI** streaming through the backend/OpenRouter path.
+- Render responses incrementally.
+- Provide generation states: `idle`, `starting`, `streaming`, `complete`, `stopped`, and `error`.
+- Support Stop through `AbortController`.
+- Support Retry and protect against stale asynchronous generations.
