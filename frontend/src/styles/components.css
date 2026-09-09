@@ -1,10 +1,7 @@
-/* components.css */
-
-/* Typography & Headings */
 .form-group label,
 .provider-section h2,
 .response-section h2 {
-  font-size: 0.95rem; /* Scaled down */
+  font-size: 0.95rem;
   font-weight: 600;
   margin: 0;
   color: #e4e4e7;
@@ -14,36 +11,35 @@
   margin-bottom: 4px;
 }
 
-/* Forms & Inputs */
 .generation-form {
   display: flex;
   flex-direction: column;
-  gap: 20px; /* Tighter gap */
+  gap: 20px;
 }
 
 .form-group {
   display: flex;
   flex-direction: column;
-  gap: 8px; /* Tighter gap */
+  gap: 8px;
 }
 
 textarea,
 select {
   width: 100%;
   border: 1px solid #27272a;
-  border-radius: 10px; /* Scaled down */
+  border-radius: 10px;
   background: #18181b;
   color: #f4f4f5;
-  padding: 12px; /* Less padding */
+  padding: 12px;
   font: inherit;
-  font-size: 0.95rem; /* Slightly smaller text */
+  font-size: 0.95rem;
   outline: none;
   transition: border-color 0.2s ease, box-shadow 0.2s ease;
 }
 
 textarea {
   resize: vertical;
-  min-height: 180px; /* Considerably shorter */
+  min-height: 180px;
   line-height: 1.5;
 }
 
@@ -63,7 +59,6 @@ select {
   padding-right: 36px;
 }
 
-/* Provider Section */
 .provider-section {
   display: flex;
   flex-direction: column;
@@ -76,13 +71,12 @@ select {
   gap: 12px;
 }
 
-/* Global Buttons */
 button {
   border: none;
   border-radius: 10px;
-  padding: 12px; /* Less padding */
+  padding: 12px;
   font: inherit;
-  font-size: 0.95rem; /* Scaled down */
+  font-size: 0.95rem;
   font-weight: 600;
   cursor: pointer;
   transition: transform 0.15s ease, border-color 0.2s ease, color 0.2s ease, background 0.2s ease;
@@ -115,7 +109,6 @@ button:disabled {
   color: #ff6200;
 }
 
-/* Response Section */
 .response-section {
   display: flex;
   flex-direction: column;
@@ -124,15 +117,15 @@ button:disabled {
 }
 
 .response-panel {
-  min-height: 240px; /* Shorter initial height */
+  min-height: 240px;
   height: 100%;
-  padding: 16px 20px; /* Tighter padding */
+  padding: 16px 20px;
   border: 1px solid #27272a;
   border-radius: 12px;
   background: #18181b;
   color: #f4f4f5;
   overflow-y: auto;
-  font-size: 0.95rem; /* Scaled down text */
+  font-size: 0.95rem;
 }
 
 .response-panel p {
@@ -161,33 +154,39 @@ button:disabled {
   font-weight: 500;
 }
 
-/* Status Component */
 .streaming-status {
   display: inline-flex;
   align-items: center;
-  gap: 8px; /* Tighter gap */
+  gap: 8px;
   min-height: 20px;
-  padding: 6px 14px; /* Tighter padding */
+  padding: 6px 14px;
   background: #18181b;
   border: 1px solid #27272a;
   border-radius: 16px;
   align-self: flex-start;
-  font-size: 0.85rem; /* Scaled down */
+  font-size: 0.85rem;
   color: #e4e4e7;
 }
 
 .status-indicator {
-  width: 8px; /* Smaller dot */
+  width: 8px;
   height: 8px;
   border-radius: 50%;
   background: #52525b;
 }
 
-/* Status Animations & Colors */
 @keyframes pulse {
-  0% { box-shadow: 0 0 0 0 rgba(255, 98, 0, 0.4); }
-  70% { box-shadow: 0 0 0 6px rgba(255, 98, 0, 0); }
-  100% { box-shadow: 0 0 0 0 rgba(255, 98, 0, 0); }
+  0% {
+    box-shadow: 0 0 0 0 rgba(255, 98, 0, 0.4);
+  }
+
+  70% {
+    box-shadow: 0 0 0 6px rgba(255, 98, 0, 0);
+  }
+
+  100% {
+    box-shadow: 0 0 0 0 rgba(255, 98, 0, 0);
+  }
 }
 
 .status-starting .status-indicator,
@@ -208,7 +207,6 @@ button:disabled {
   background: #ef4444;
 }
 
-/* Controls (Stop / Retry) */
 .generation-controls {
   display: flex;
   gap: 12px;
@@ -233,7 +231,6 @@ button:disabled {
   background: rgba(255, 98, 0, 0.05);
 }
 
-/* Mobile Adjustments for components */
 @media (max-width: 700px) {
   .provider-buttons {
     grid-template-columns: 1fr;
