@@ -8,6 +8,7 @@ import StreamingStatus from "./components/StreamingStatus";
 import GenerationControls from "./components/GenerationControls";
 
 import { useAIStreaming } from "./hooks/useAIStreaming";
+import { SAMPLE_TEXT } from "./constants/sampleText";
 
 import "./styles/layout.css";
 import "./styles/components.css";
@@ -41,6 +42,7 @@ function App() {
               operation={operation}
               onInputChange={setInput}
               onOperationChange={setOperation}
+              onLoadSample={() => setInput(SAMPLE_TEXT)}
               disabled={isGenerating}
             />
 
@@ -51,10 +53,7 @@ function App() {
           </div>
 
           <div className="right-panel">
-            <ResponsePanel
-              output={output}
-              error={error}
-            />
+            <ResponsePanel output={output} error={error} />
 
             <div className="status-controls-wrapper">
               <StreamingStatus status={status} />

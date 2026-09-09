@@ -3,12 +3,24 @@ function GenerationForm({
   operation,
   onInputChange,
   onOperationChange,
+  onLoadSample,
   disabled,
 }) {
   return (
     <section className="generation-form">
       <div className="form-group">
-        <label htmlFor="input-text">Enter your text</label>
+        <div className="input-header">
+          <label htmlFor="input-text">Enter your text</label>
+
+          <button
+            type="button"
+            onClick={onLoadSample}
+            disabled={disabled}
+            className="load-sample-button"
+          >
+            Load Sample
+          </button>
+        </div>
 
         <textarea
           id="input-text"
