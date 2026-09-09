@@ -32,10 +32,7 @@ export async function consumeTextStream({
 
         for (const content of contents) {
           if (signal?.aborted) {
-            throw new DOMException(
-              "The operation was aborted.",
-              "AbortError"
-            );
+            throw new DOMException("The operation was aborted.", "AbortError");
           }
 
           onChunk(content);

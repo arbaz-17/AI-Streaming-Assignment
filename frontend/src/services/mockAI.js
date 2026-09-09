@@ -1,9 +1,9 @@
 const MOCK_RESPONSES = {
   summarize:
-    "React is a JavaScript library for building user interfaces. It uses reusable components and state to create interactive applications.",
+    "Grand Theft Auto VI is one of the most highly anticipated open-world games from Rockstar Games. Set in the fictional state of Leonida, including the neon-filled streets of Vice City, the game follows Lucia and her partner as they become involved in a dangerous criminal adventure. Players can explore a massive world filled with cities, beaches, highways, businesses, and countless activities while experiencing a story focused on crime, relationships, ambition, and survival.",
 
   rewrite:
-    "React is a JavaScript library that helps developers build interactive user interfaces through reusable components and state-driven rendering.",
+    "Grand Theft Auto VI is Rockstar Games' next major open-world action-adventure title, taking players back to the iconic Vice City in a modern and expanded setting. The story centers around Lucia and her partner as they find themselves caught in a world of crime, money, danger, and unexpected opportunities. With a huge map, detailed environments, memorable characters, and a wide variety of activities to explore, GTA VI aims to deliver an immersive experience that feels bigger and more alive than previous games in the series.",
 };
 
 const wait = (ms) =>
