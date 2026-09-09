@@ -7,58 +7,27 @@ import ResponsePanel from "./components/ResponsePanel";
 import StreamingStatus from "./components/StreamingStatus";
 import GenerationControls from "./components/GenerationControls";
 
+import { useAIStreaming } from "./hooks/useAIStreaming";
+
 import "./styles/layout.css";
 import "./styles/components.css";
-
-const INITIAL_STATUS = "idle";
 
 function App() {
   const [input, setInput] = useState("");
   const [operation, setOperation] = useState("summarize");
 
-  const [output, setOutput] = useState("");
-  const [status, setStatus] = useState(INITIAL_STATUS);
-  const [error, setError] = useState("");
-
-  const [provider, setProvider] = useState(null);
-
-  const isGenerating =
-    status === "starting" || status === "streaming";
-
-  const handleGenerate = (selectedProvider) => {
-    if (!input.trim()) {
-      setError("Please enter some text before generating a response.");
-      setStatus("error");
-      return;
-    }
-
-    setProvider(selectedProvider);
-    setOutput("");
-    setError("");
-
-    /*
-     * Actual generation will be implemented in later phases.
-     *
-     * For now we only establish the state transition that
-     * a generation has started.
-     */
-    setStatus("starting");
-  };
-
-  const handleStop = () => {
-    /*
-     * AbortController will be implemented in Phase 6.
-     */
-    setStatus("stopped");
-  };
-
-  const handleRetry = () => {
-    if (!provider) {
-      return;
-    }
-
-    handleGenerate(provider);
-  };
+  const {
+    output,
+    status,
+    error,
+    isGenerating,
+    handleGenerate,
+    handleStop,
+    handleRetry,
+  } = useAIStreaming({
+    input,
+    operation,
+  });
 
   return (
     <div className="app">
@@ -66,7 +35,6 @@ function App() {
         <Header />
 
         <main className="main-layout">
-          {/* Left Panel: Inputs and Triggers */}
           <div className="left-panel">
             <GenerationForm
               input={input}
@@ -82,7 +50,6 @@ function App() {
             />
           </div>
 
-          {/* Right Panel: Results and Controls */}
           <div className="right-panel">
             <ResponsePanel
               output={output}
