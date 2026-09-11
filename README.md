@@ -25,7 +25,7 @@ The assignment demonstrates mocked browser-side streaming as required by the ass
 | `frontend/src/components/` | Presentational React components for input, provider actions, response display, status, and generation controls. | [Components README](./frontend/src/components/README.md) |
 | `frontend/src/hooks/` | Manages the AI generation lifecycle, cancellation, retry, stale-generation protection, and cleanup. | [Hooks README](./frontend/src/hooks/README.md) |
 | `frontend/src/services/` | Creates/requests streams, consumes `ReadableStream` data, decodes chunks, and parses SSE. | [Services README](./frontend/src/services/README.md) |
-| `frontend/src/App.jsx` | Root page-level component that composes the UI and connects it to the streaming hook. | [App README](./frontend/src/app-README.md) |
+| `frontend/src/App.jsx` | Root page-level component that composes the UI and connects it to the streaming hook. | [App README](./frontend/src/README.md) |
 | `backend/routes/` | Validates generation requests and forwards the OpenRouter stream. | [Routes README](./backend/README.md) |
 | `backend/providers/` | Contains the OpenRouter integration and AI request configuration. | [Providers README](./backend/README.md) |
 | `backend/server.js` | Configures Express and supports both local execution and Vercel deployment. | [Server README](./backend/README.md) |
